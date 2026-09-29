@@ -25,18 +25,6 @@ export const AuthProvider = ({ children }) => {
       return { success: false, error: err };
     }
 
-    if (trimmedUsername.length < 3) {
-      const err = 'Username must be at least 3 characters long.';
-      setAuthError(err);
-      return { success: false, error: err };
-    }
-
-    if (password.length < 4) {
-      const err = 'Password must be at least 4 characters long.';
-      setAuthError(err);
-      return { success: false, error: err };
-    }
-
     const userData = {
       username: trimmedUsername,
       loginTime: new Date().toISOString(),

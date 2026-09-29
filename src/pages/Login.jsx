@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Card,
@@ -26,7 +26,7 @@ import { useAuth } from '../context/AuthContext';
 const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login, authError, setAuthError } = useAuth();
+  const { user, login, authError, setAuthError } = useAuth();
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -34,27 +34,27 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [validationError, setValidationError] = useState('');
 
-  // Destination after login (default to Home)
-  const from = location.state?.from?.pathname || '/';
+  // Destination after login (default to Home /home)
+  const destination =
+    location.state?.from?.pathname &&
+    location.state.from.pathname !== '/' &&
+    location.state.from.pathname !== '/login'
+      ? location.state.from.pathname
+      : '/home';
+
+  // If already authenticated, redirect to Home
+  useEffect(() => {
+    if (user) {
+      navigate('/home', { replace: true });
+    }
+  }, [user, navigate]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setValidationError('');
 
-    if (!username.trim()) {
-      setValidationError('Please enter your username.');
-      return;
-    }
-    if (username.trim().length < 3) {
-      setValidationError('Username must be at least 3 characters.');
-      return;
-    }
-    if (!password) {
-      setValidationError('Please enter your password.');
-      return;
-    }
-    if (password.length < 4) {
-      setValidationError('Password must be at least 4 characters.');
+    if (!username.trim() || !password) {
+      setValidationError('Please enter both username and password.');
       return;
     }
 
@@ -63,7 +63,7 @@ const Login = () => {
     setLoading(false);
 
     if (result.success) {
-      navigate(from, { replace: true });
+      navigate(destination, { replace: true });
     }
   };
 

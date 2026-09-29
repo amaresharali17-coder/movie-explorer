@@ -86,7 +86,7 @@ const Favorites = () => {
           !filterQuery
             ? {
                 label: 'Discover Trending Movies',
-                onClick: () => navigate('/'),
+                onClick: () => navigate('/home'),
               }
             : null
         }

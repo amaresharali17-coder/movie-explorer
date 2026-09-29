@@ -47,7 +47,7 @@ const Navbar = ({ onOpenApiKeyModal }) => {
   };
 
   const navItems = [
-    { label: 'Home', path: '/', icon: <HomeIcon /> },
+    { label: 'Home', path: '/home', icon: <HomeIcon /> },
     {
       label: 'Favorites',
       path: '/favorites',
@@ -108,39 +108,52 @@ const Navbar = ({ onOpenApiKeyModal }) => {
 
       <Divider sx={{ mb: 1 }} />
 
-      <List sx={{ flexGrow: 1 }}>
-        {navItems.map((item) => {
-          const isActive = location.pathname === item.path;
-          return (
-            <ListItem key={item.label} disablePadding sx={{ mb: 0.5 }}>
-              <ListItemButton
-                onClick={() => handleNavClick(item.path)}
-                selected={isActive}
-                sx={{
-                  borderRadius: 2,
-                  color: isActive ? 'primary.main' : 'text.primary',
-                  '&.Mui-selected': {
-                    bgcolor: themeMode === 'dark' ? 'rgba(229, 9, 20, 0.15)' : 'rgba(229, 9, 20, 0.08)',
-                    '&:hover': {
-                      bgcolor: themeMode === 'dark' ? 'rgba(229, 9, 20, 0.22)' : 'rgba(229, 9, 20, 0.12)',
-                    },
-                  },
-                }}
-              >
-                <ListItemIcon sx={{ color: isActive ? 'primary.main' : 'inherit', minWidth: 40 }}>
-                  {item.icon}
-                </ListItemIcon>
-                <ListItemText
-                  primary={item.label}
-                  primaryTypographyProps={{ fontWeight: isActive ? 700 : 500 }}
-                />
-              </ListItemButton>
-            </ListItem>
-          );
-        })}
-      </List>
-
-      <Divider sx={{ my: 1 }} />
+      {isAuthenticated && (
+        <>
+          <List sx={{ flexGrow: 1 }}>
+            {navItems.map((item) => {
+              const isActive =
+                location.pathname === item.path ||
+                (item.path === '/home' && location.pathname === '/');
+              return (
+                <ListItem key={item.label} disablePadding sx={{ mb: 0.5 }}>
+                  <ListItemButton
+                    onClick={() => handleNavClick(item.path)}
+                    selected={isActive}
+                    sx={{
+                      borderRadius: 2,
+                      color: isActive ? 'primary.main' : 'text.primary',
+                      '&.Mui-selected': {
+                        bgcolor:
+                          themeMode === 'dark'
+                            ? 'rgba(229, 9, 20, 0.15)'
+                            : 'rgba(229, 9, 20, 0.08)',
+                        '&:hover': {
+                          bgcolor:
+                            themeMode === 'dark'
+                              ? 'rgba(229, 9, 20, 0.22)'
+                              : 'rgba(229, 9, 20, 0.12)',
+                        },
+                      },
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{ color: isActive ? 'primary.main' : 'inherit', minWidth: 40 }}
+                    >
+                      {item.icon}
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={item.label}
+                      primaryTypographyProps={{ fontWeight: isActive ? 700 : 500 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              );
+            })}
+          </List>
+          <Divider sx={{ my: 1 }} />
+        </>
+      )}
 
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
         {onOpenApiKeyModal && (
@@ -211,7 +224,7 @@ const Navbar = ({ onOpenApiKeyModal }) => {
                 cursor: 'pointer',
                 userSelect: 'none',
               }}
-              onClick={() => navigate('/')}
+              onClick={() => navigate(isAuthenticated ? '/home' : '/login')}
             >
               <MovieIcon sx={{ color: 'primary.main', fontSize: 34 }} />
               <Typography
@@ -227,38 +240,42 @@ const Navbar = ({ onOpenApiKeyModal }) => {
               </Typography>
             </Box>
 
-            {/* Desktop Navigation Links */}
-            <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 1 }}>
-              {navItems.map((item) => {
-                const isActive = location.pathname === item.path;
-                return (
-                  <Button
-                    key={item.label}
-                    onClick={() => navigate(item.path)}
-                    startIcon={item.icon}
-                    sx={{
-                      px: 2,
-                      py: 1,
-                      fontWeight: isActive ? 700 : 500,
-                      color: isActive ? 'primary.main' : 'text.primary',
-                      backgroundColor: isActive
-                        ? themeMode === 'dark'
-                          ? 'rgba(229, 9, 20, 0.12)'
-                          : 'rgba(229, 9, 20, 0.08)'
-                        : 'transparent',
-                      '&:hover': {
-                        backgroundColor:
-                          themeMode === 'dark'
-                            ? 'rgba(255, 255, 255, 0.05)'
-                            : 'rgba(0, 0, 0, 0.04)',
-                      },
-                    }}
-                  >
-                    {item.label}
-                  </Button>
-                );
-              })}
-            </Box>
+            {/* Desktop Navigation Links (Only shown when logged in) */}
+            {isAuthenticated && (
+              <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 1 }}>
+                {navItems.map((item) => {
+                  const isActive =
+                    location.pathname === item.path ||
+                    (item.path === '/home' && location.pathname === '/');
+                  return (
+                    <Button
+                      key={item.label}
+                      onClick={() => navigate(item.path)}
+                      startIcon={item.icon}
+                      sx={{
+                        px: 2,
+                        py: 1,
+                        fontWeight: isActive ? 700 : 500,
+                        color: isActive ? 'primary.main' : 'text.primary',
+                        backgroundColor: isActive
+                          ? themeMode === 'dark'
+                            ? 'rgba(229, 9, 20, 0.12)'
+                            : 'rgba(229, 9, 20, 0.08)'
+                          : 'transparent',
+                        '&:hover': {
+                          backgroundColor:
+                            themeMode === 'dark'
+                              ? 'rgba(255, 255, 255, 0.05)'
+                              : 'rgba(0, 0, 0, 0.04)',
+                        },
+                      }}
+                    >
+                      {item.label}
+                    </Button>
+                  );
+                })}
+              </Box>
+            )}
 
             {/* Desktop Right Actions */}
             <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 1.5 }}>

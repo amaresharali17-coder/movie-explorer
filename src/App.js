@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider, CssBaseline, Snackbar, Alert, Box, Typography, Container, Link } from '@mui/material';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { MovieProvider, useMovies } from './context/MovieContext';
 import { getAppTheme } from './theme';
 
@@ -19,6 +19,7 @@ import MovieDetailsPage from './pages/MovieDetailsPage';
 
 const AppContent = () => {
   const { themeMode, toast, closeToast } = useMovies();
+  const { isAuthenticated } = useAuth();
   const [apiKeyModalOpen, setApiKeyModalOpen] = useState(false);
 
   const theme = useMemo(() => getAppTheme(themeMode), [themeMode]);
@@ -34,15 +35,34 @@ const AppContent = () => {
 
         <Box component="main" sx={{ flexGrow: 1 }}>
           <Routes>
-            <Route path="/login" element={<Login />} />
+            {/* Root URL "/" always opens the Login page first if not logged in */}
             <Route
               path="/"
+              element={
+                isAuthenticated ? (
+                  <Navigate to="/home" replace />
+                ) : (
+                  <Navigate to="/login" replace />
+                )
+              }
+            />
+
+            <Route
+              path="/login"
+              element={
+                isAuthenticated ? <Navigate to="/home" replace /> : <Login />
+              }
+            />
+
+            <Route
+              path="/home"
               element={
                 <ProtectedRoute>
                   <Home onOpenApiKeyModal={handleOpenApiKeyModal} />
                 </ProtectedRoute>
               }
             />
+
             <Route
               path="/search"
               element={
@@ -51,6 +71,7 @@ const AppContent = () => {
                 </ProtectedRoute>
               }
             />
+
             <Route
               path="/movie/:id"
               element={
@@ -59,6 +80,7 @@ const AppContent = () => {
                 </ProtectedRoute>
               }
             />
+
             <Route
               path="/favorites"
               element={
@@ -67,8 +89,14 @@ const AppContent = () => {
                 </ProtectedRoute>
               }
             />
-            {/* Catch-all redirect to Home */}
-            <Route path="*" element={<Navigate to="/" replace />} />
+
+            {/* Catch-all redirect */}
+            <Route
+              path="*"
+              element={
+                <Navigate to={isAuthenticated ? '/home' : '/login'} replace />
+              }
+            />
           </Routes>
         </Box>
 
