@@ -22,12 +22,11 @@ import ErrorMessage from '../components/ErrorMessage';
 import useInfiniteScroll from '../hooks/useInfiniteScroll';
 
 const SearchResults = ({ onOpenApiKeyModal }) => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const queryParam = searchParams.get('q') || '';
 
   const {
     searchResults,
-    searchQuery,
     searchPage,
     totalSearchPages,
     totalSearchResults,
@@ -44,10 +43,10 @@ const SearchResults = ({ onOpenApiKeyModal }) => {
 
   // Sync query from URL param
   useEffect(() => {
-    if (queryParam && queryParam !== searchQuery) {
+    if (queryParam) {
       executeSearch(queryParam);
     }
-  }, [queryParam, searchQuery, executeSearch]);
+  }, [queryParam, executeSearch]);
 
   const hasMore = searchPage < totalSearchPages;
 
@@ -66,7 +65,7 @@ const SearchResults = ({ onOpenApiKeyModal }) => {
           initialQuery={queryParam}
           variant="compact"
           fullWidth={false}
-          onSearchSubmit={(newQuery) => executeSearch(newQuery)}
+          onSearchSubmit={(newQuery) => setSearchParams({ q: newQuery })}
         />
       </Box>
 
@@ -160,8 +159,12 @@ const SearchResults = ({ onOpenApiKeyModal }) => {
           movies={searchResults}
           loading={searchLoading}
           skeletonCount={10}
-          emptyTitle={`No movies found for "${queryParam}"`}
-          emptyMessage="Please check the spelling or try searching for another title, actor, or genre."
+          emptyTitle={queryParam ? `No movies found for "${queryParam}"` : 'Discover Amazing Movies'}
+          emptyMessage={
+            queryParam
+              ? 'Please check the spelling or try searching for another title, actor, or genre.'
+              : 'Enter a movie title, franchise, or actor in the search bar above to begin searching.'
+          }
         />
       )}
 

@@ -11,7 +11,8 @@ A modern, responsive, mobile-first web application for discovering, searching, a
 
 ## Live Demo
 
-- **Live URL**: [https://movie-explorer-demo.vercel.app](https://movie-explorer-demo.vercel.app) *(Deploy URL placeholder / Vercel ready)*
+- **Live URL**: `[Live Demo URL — Add your live Vercel/Netlify deployment URL here]`
+  > *See the [Deployment Instructions](#deployment-instructions) section below to deploy in under 2 minutes.*
 - **Demo Account Credentials**:
   - **Username**: `movie_lover` (or any username with 3+ chars)
   - **Password**: `explorer123` (or any password with 4+ chars)

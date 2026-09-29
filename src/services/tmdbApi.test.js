@@ -23,4 +23,10 @@ describe('tmdbApi helper functions', () => {
     expect(placeholder).toContain('data:image/svg+xml;utf8');
     expect(placeholder).toContain('The%20Dark%20Knight');
   });
+
+  test('searchMovies returns empty result structure when query is empty or whitespace', async () => {
+    const { searchMovies } = await import('./tmdbApi');
+    const result = await searchMovies('   ');
+    expect(result).toEqual({ results: [], total_pages: 0, total_results: 0, page: 1 });
+  });
 });

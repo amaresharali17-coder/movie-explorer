@@ -32,10 +32,16 @@ tmdbClient.interceptors.request.use(
       // Do not block request immediately; let it reach TMDb or trigger informative error
       console.warn('TMDb API key is not configured.');
     }
-    config.params = {
-      ...config.params,
-      api_key: apiKey,
-    };
+    if (apiKey) {
+      if (apiKey.startsWith('ey') || apiKey.length > 40) {
+        config.headers.Authorization = `Bearer ${apiKey}`;
+      } else {
+        config.params = {
+          ...config.params,
+          api_key: apiKey,
+        };
+      }
+    }
     return config;
   },
   (error) => Promise.reject(error)
