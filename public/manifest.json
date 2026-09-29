@@ -1,0 +1,9 @@
+{
+  "short_name": "MovieExplorer",
+  "name": "Movie Explorer – Discover Your Favorite Films",
+  "icons": [],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#121212",
+  "background_color": "#121212"
+}
