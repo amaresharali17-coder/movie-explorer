@@ -1,9 +1,15 @@
 {
-  "short_name": "MovieExplorer",
-  "name": "Movie Explorer – Discover Your Favorite Films",
-  "icons": [],
-  "start_url": ".",
+  "short_name": "Amaresh Arali",
+  "name": "Amaresh Arali – Java Full-Stack Developer Portfolio",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "64x64 32x32 24x24 16x16"
+    }
+  ],
+  "start_url": "/",
   "display": "standalone",
-  "theme_color": "#121212",
-  "background_color": "#121212"
+  "theme_color": "#0C0C0C",
+  "background_color": "#0C0C0C"
 }
